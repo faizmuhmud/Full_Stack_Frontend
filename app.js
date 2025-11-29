@@ -1,4 +1,3 @@
-// Basic lesson listing with static data
 const { createApp } = Vue;
 
 createApp({
@@ -8,40 +7,12 @@ createApp({
             currentPage: "lessons",
             cart: [],
             
-            // Static lesson data 
             lessons: [
-                {
-                    id: 1,
-                    subject: "Mathematics",
-                    location: "Dubai",
-                    price: 150,
-                    spaces: 5,
-                    image: "https://via.placeholder.com/300x200?text=Math"
-                },
-                {
-                    id: 2,
-                    subject: "English",
-                    location: "Abu Dhabi",
-                    price: 120,
-                    spaces: 8,
-                    image: "https://via.placeholder.com/300x200?text=English"
-                },
-                {
-                    id: 3,
-                    subject: "Science",
-                    location: "Sharjah",
-                    price: 180,
-                    spaces: 3,
-                    image: "https://via.placeholder.com/300x200?text=Science"
-                },
-                {
-                    id: 4,
-                    subject: "Art",
-                    location: "Dubai",
-                    price: 100,
-                    spaces: 10,
-                    image: "https://via.placeholder.com/300x200?text=Art"
-                }
+                { id: 1, subject: "Mathematics", location: "Dubai", price: 150, spaces: 5, image: "https://via.placeholder.com/300x200?text=Math" },
+                { id: 2, subject: "English", location: "Abu Dhabi", price: 120, spaces: 8, image: "https://via.placeholder.com/300x200?text=English" },
+                { id: 3, subject: "Science", location: "Sharjah", price: 180, spaces: 3, image: "https://via.placeholder.com/300x200?text=Science" },
+                { id: 4, subject: "Art", location: "Dubai", price: 100, spaces: 10, image: "https://via.placeholder.com/300x200?text=Art" },
+                { id: 5, subject: "Music", location: "Ajman", price: 130, spaces: 6, image: "https://via.placeholder.com/300x200?text=Music" }
             ]
         };
     },
@@ -57,26 +28,16 @@ createApp({
     },
 
     methods: {
-        showLessons() { 
-            this.currentPage = "lessons"; 
-        },
-        
-        showCart() { 
-            this.currentPage = "cart"; 
-        },
+        showLessons() { this.currentPage = "lessons"; },
+        showCart() { this.currentPage = "cart"; },
 
         addToCart(lesson) {
             const found = this.cart.find(i => i.id === lesson.id);
-
             if (found) {
                 found.qty++;
             } else {
-                this.cart.push({ 
-                    ...lesson, 
-                    qty: 1 
-                });
+                this.cart.push({ ...lesson, qty: 1 });
             }
-
             lesson.spaces--;
         },
 

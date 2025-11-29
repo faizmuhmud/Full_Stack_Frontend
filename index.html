@@ -9,32 +9,27 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER -->
         <header>
             <h1>{{ appName }}</h1>
             <nav>
-                <button @click="showLessons" :class="{ active: currentPage === 'lessons' }">
-                    Lessons
-                </button>
+                <button @click="showLessons" :class="{ active: currentPage === 'lessons' }">Lessons</button>
                 <button v-if="cartCount > 0" @click="showCart" :class="{ active: currentPage === 'cart' }">
-                    Cart ({{ cartCount }})
+                    🛒 Cart ({{ cartCount }})
                 </button>
             </nav>
         </header>
 
         <main class="container">
-            <!-- LESSONS PAGE -->
             <section v-if="currentPage === 'lessons'">
                 <h2>Available Classes</h2>
-
                 <div class="lessons-grid">
                     <div v-for="lesson in lessons" :key="lesson.id" class="lesson-card">
                         <div class="lesson-image">
-                            <img :src="lesson.image" :alt="lesson.subject">
+                            <img :src="lesson.image">
                         </div>
                         <div class="lesson-details">
                             <h3>{{ lesson.subject }}</h3>
-                            <p>Location: {{ lesson.location }}</p>
+                            <p>📍 {{ lesson.location }}</p>
                             <p class="price">AED {{ lesson.price }}</p>
                             <p>Spaces: {{ lesson.spaces }}</p>
                             <button class="add-btn" :disabled="lesson.spaces === 0" @click="addToCart(lesson)">
@@ -45,27 +40,26 @@
                 </div>
             </section>
 
-            <!-- CART PAGE -->
             <section v-if="currentPage === 'cart'" class="cart-section">
                 <h2>Your Cart</h2>
-
+                
                 <div v-if="cart.length === 0" class="empty-cart">
                     <p>Your cart is empty</p>
-                    <button @click="showLessons">Browse Lessons</button>
+                    <button @click="showLessons" class="continue-btn">Continue Shopping</button>
                 </div>
 
                 <div v-else>
                     <div v-for="item in cart" :key="item.id" class="cart-item">
-                        <div>
+                        <div class="item-info">
                             <h3>{{ item.subject }}</h3>
                             <p>{{ item.location }}</p>
                             <p class="price">AED {{ item.price }}</p>
                         </div>
 
                         <div class="qty-controls">
-                            <button @click="decreaseQty(item)">-</button>
-                            <span>{{ item.qty }}</span>
-                            <button @click="increaseQty(item)">+</button>
+                            <button class="qty-btn" @click="decreaseQty(item)">−</button>
+                            <span class="qty-display">{{ item.qty }}</span>
+                            <button class="qty-btn" @click="increaseQty(item)">+</button>
                         </div>
 
                         <button class="remove-btn" @click="removeLesson(item)">Remove</button>
@@ -78,7 +72,6 @@
             </section>
         </main>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
