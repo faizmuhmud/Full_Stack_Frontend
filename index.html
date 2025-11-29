@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,9 +36,26 @@
                     <button v-if="searchQuery" class="clear-btn" @click="searchQuery=''">✕</button>
                 </div>
 
+                <!-- SORTING -->
+                <div class="sort-container">
+                    <label>Sort by:</label>
+                    <select class="sort-select" v-model="sortBy">
+                        <option value="">-- Select --</option>
+                        <option value="subject">Subject</option>
+                        <option value="location">Location</option>
+                        <option value="price">Price</option>
+                        <option value="availability">Availability</option>
+                    </select>
+
+                    <select class="sort-select" v-model="sortOrder" :disabled="!sortBy">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
+
                 <!-- LESSON GRID -->
                 <div class="lessons-grid">
-                    <div v-for="lesson in filteredLessons" :key="lesson.id" class="lesson-card">
+                    <div v-for="lesson in filteredAndSortedLessons" :key="lesson.id" class="lesson-card">
                         <div class="lesson-image">
                             <img :src="lesson.image">
                         </div>
@@ -57,7 +72,7 @@
                 </div>
 
                 <!-- NO RESULTS MESSAGE -->
-                <p v-if="filteredLessons.length === 0" class="no-results">
+                <p v-if="filteredAndSortedLessons.length === 0" class="no-results">
                     No classes found matching "{{ searchQuery }}"
                 </p>
             </section>

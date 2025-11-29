@@ -1,5 +1,3 @@
-
-
 const { createApp } = Vue;
 
 createApp({
@@ -9,6 +7,8 @@ createApp({
             currentPage: "lessons",
             cart: [],
             searchQuery: "",
+            sortBy: "",
+            sortOrder: "asc",
             
             lessons: [
                 { id: 1, subject: "Mathematics", location: "Dubai", price: 150, spaces: 5, image: "https://via.placeholder.com/300x200?text=Math" },
@@ -32,14 +32,38 @@ createApp({
             return this.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
         },
 
-        filteredLessons() {
-            if (!this.searchQuery) return this.lessons;
-            
-            const query = this.searchQuery.toLowerCase();
-            return this.lessons.filter(lesson => 
-                lesson.subject.toLowerCase().includes(query) ||
-                lesson.location.toLowerCase().includes(query)
-            );
+        filteredAndSortedLessons() {
+            let list = [...this.lessons];
+
+            // Filter by search query
+            if (this.searchQuery) {
+                const query = this.searchQuery.toLowerCase();
+                list = list.filter(lesson => 
+                    lesson.subject.toLowerCase().includes(query) ||
+                    lesson.location.toLowerCase().includes(query)
+                );
+            }
+
+            // Sort
+            if (this.sortBy) {
+                list.sort((a, b) => {
+                    let compareValue = 0;
+
+                    if (this.sortBy === "subject") {
+                        compareValue = a.subject.localeCompare(b.subject);
+                    } else if (this.sortBy === "location") {
+                        compareValue = a.location.localeCompare(b.location);
+                    } else if (this.sortBy === "price") {
+                        compareValue = a.price - b.price;
+                    } else if (this.sortBy === "availability") {
+                        compareValue = a.spaces - b.spaces;
+                    }
+
+                    return this.sortOrder === "asc" ? compareValue : -compareValue;
+                });
+            }
+
+            return list;
         }
     },
 
