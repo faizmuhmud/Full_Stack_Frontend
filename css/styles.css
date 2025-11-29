@@ -523,3 +523,99 @@ h2 {
         padding: 0.875rem 3rem 0.875rem 1.25rem;
     }
 }
+
+/* Checkout Form */
+.checkout-form {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-xl);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.checkout-form h2 {
+    color: var(--text-dark);
+    text-shadow: none;
+    margin-bottom: 2rem;
+}
+
+.checkout-form label {
+    display: block;
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
+.checkout-form input,
+.checkout-form textarea {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition);
+    background: var(--bg-light);
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    background: var(--white);
+}
+
+.checkout-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.error-message {
+    display: block;
+    color: var(--danger-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1.25rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    margin-top: 2rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+.checkout-btn {
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--primary-color);
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    margin-top: 1rem;
+}
+
+.checkout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}

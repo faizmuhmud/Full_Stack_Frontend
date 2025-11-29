@@ -9,34 +9,27 @@
 </head>
 <body>
     <div id="app">
-        <!-- HEADER -->
         <header>
             <h1>{{ appName }}</h1>
             <nav>
-                <button @click="showLessons" :class="{ active: currentPage === 'lessons' }">
-                    Lessons
-                </button>
+                <button @click="showLessons" :class="{ active: currentPage === 'lessons' }">Lessons</button>
                 <button v-if="cartCount > 0" @click="showCart" :class="{ active: currentPage === 'cart' }">
                     🛒 Cart ({{ cartCount }})
+                </button>
+                <button v-if="cartCount > 0" @click="showCheckout" :class="{ active: currentPage === 'checkout' }">
+                    Checkout
                 </button>
             </nav>
         </header>
 
         <main class="container">
-            <!-- ================= LESSONS PAGE ================= -->
+            <!-- LESSONS PAGE (same as V5) -->
             <section v-if="currentPage === 'lessons'">
                 <h2>Available Classes</h2>
-
-                <!-- SEARCH -->
                 <div class="search-container">
-                    <input 
-                        class="search-input" 
-                        v-model="searchQuery" 
-                        placeholder="Search by subject or location...">
+                    <input class="search-input" v-model="searchQuery" placeholder="Search by subject or location...">
                     <button v-if="searchQuery" class="clear-btn" @click="searchQuery=''">✕</button>
                 </div>
-
-                <!-- SORTING -->
                 <div class="sort-container">
                     <label>Sort by:</label>
                     <select class="sort-select" v-model="sortBy">
@@ -46,14 +39,11 @@
                         <option value="price">Price</option>
                         <option value="availability">Availability</option>
                     </select>
-
                     <select class="sort-select" v-model="sortOrder" :disabled="!sortBy">
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
                 </div>
-
-                <!-- LESSON GRID -->
                 <div class="lessons-grid">
                     <div v-for="lesson in filteredAndSortedLessons" :key="lesson.id" class="lesson-card">
                         <div class="lesson-image">
@@ -70,22 +60,18 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- NO RESULTS MESSAGE -->
                 <p v-if="filteredAndSortedLessons.length === 0" class="no-results">
                     No classes found matching "{{ searchQuery }}"
                 </p>
             </section>
 
-            <!-- ================= CART PAGE ================= -->
+            <!-- CART PAGE (same as V5) -->
             <section v-if="currentPage === 'cart'" class="cart-section">
                 <h2>Your Cart</h2>
-                
                 <div v-if="cart.length === 0" class="empty-cart">
                     <p>Your cart is empty</p>
                     <button @click="showLessons" class="continue-btn">Continue Shopping</button>
                 </div>
-
                 <div v-else>
                     <div v-for="item in cart" :key="item.id" class="cart-item">
                         <div class="item-info">
@@ -93,24 +79,50 @@
                             <p>{{ item.location }}</p>
                             <p class="price">AED {{ item.price }}</p>
                         </div>
-
                         <div class="qty-controls">
                             <button class="qty-btn" @click="decreaseQty(item)">−</button>
                             <span class="qty-display">{{ item.qty }}</span>
                             <button class="qty-btn" @click="increaseQty(item)">+</button>
                         </div>
-
                         <button class="remove-btn" @click="removeLesson(item)">Remove</button>
                     </div>
-
                     <div class="cart-summary">
                         <h3>Total: AED {{ cartTotal }}</h3>
+                        <button class="checkout-btn" @click="showCheckout">Proceed to Checkout</button>
                     </div>
                 </div>
             </section>
+
+            <!-- CHECKOUT PAGE (NEW) -->
+            <section v-if="currentPage === 'checkout'" class="checkout-form">
+                <h2>Customer Details</h2>
+
+                <label>First Name</label>
+                <input v-model="customer.firstName" @blur="validateField('firstName')" @input="validateField('firstName')">
+                <span v-if="errors.firstName" class="error-message">{{ errors.firstName }}</span>
+
+                <label>Last Name</label>
+                <input v-model="customer.lastName" @blur="validateField('lastName')" @input="validateField('lastName')">
+                <span v-if="errors.lastName" class="error-message">{{ errors.lastName }}</span>
+
+                <label>City</label>
+                <input v-model="customer.city" @blur="validateField('city')" @input="validateField('city')">
+                <span v-if="errors.city" class="error-message">{{ errors.city }}</span>
+
+                <label>Address</label>
+                <textarea v-model="customer.address" @blur="validateField('address')" @input="validateField('address')"></textarea>
+                <span v-if="errors.address" class="error-message">{{ errors.address }}</span>
+
+                <label>Postal Code</label>
+                <input v-model="customer.postal" @blur="validateField('postal')" @input="validateField('postal')">
+                <span v-if="errors.postal" class="error-message">{{ errors.postal }}</span>
+
+                <button class="submit-btn" @click="submitOrder">
+                    Complete Order
+                </button>
+            </section>
         </main>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
