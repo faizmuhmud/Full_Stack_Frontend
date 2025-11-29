@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +11,13 @@
 </head>
 <body>
     <div id="app">
+        <!-- HEADER -->
         <header>
             <h1>{{ appName }}</h1>
             <nav>
-                <button @click="showLessons" :class="{ active: currentPage === 'lessons' }">Lessons</button>
+                <button @click="showLessons" :class="{ active: currentPage === 'lessons' }">
+                    Lessons
+                </button>
                 <button v-if="cartCount > 0" @click="showCart" :class="{ active: currentPage === 'cart' }">
                     🛒 Cart ({{ cartCount }})
                 </button>
@@ -20,10 +25,22 @@
         </header>
 
         <main class="container">
+            <!-- ================= LESSONS PAGE ================= -->
             <section v-if="currentPage === 'lessons'">
                 <h2>Available Classes</h2>
+
+                <!-- SEARCH -->
+                <div class="search-container">
+                    <input 
+                        class="search-input" 
+                        v-model="searchQuery" 
+                        placeholder="Search by subject or location...">
+                    <button v-if="searchQuery" class="clear-btn" @click="searchQuery=''">✕</button>
+                </div>
+
+                <!-- LESSON GRID -->
                 <div class="lessons-grid">
-                    <div v-for="lesson in lessons" :key="lesson.id" class="lesson-card">
+                    <div v-for="lesson in filteredLessons" :key="lesson.id" class="lesson-card">
                         <div class="lesson-image">
                             <img :src="lesson.image">
                         </div>
@@ -38,8 +55,14 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- NO RESULTS MESSAGE -->
+                <p v-if="filteredLessons.length === 0" class="no-results">
+                    No classes found matching "{{ searchQuery }}"
+                </p>
             </section>
 
+            <!-- ================= CART PAGE ================= -->
             <section v-if="currentPage === 'cart'" class="cart-section">
                 <h2>Your Cart</h2>
                 
@@ -72,6 +95,7 @@
             </section>
         </main>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -10,6 +11,7 @@ body {
     color: #333;
 }
 
+/* ================= HEADER ================= */
 header {
     background: white;
     padding: 1rem 2rem;
@@ -28,6 +30,11 @@ nav button {
     background: #ddd;
     cursor: pointer;
     border-radius: 4px;
+    transition: all 0.2s;
+}
+
+nav button:hover {
+    background: #ccc;
 }
 
 nav button.active {
@@ -35,6 +42,7 @@ nav button.active {
     color: white;
 }
 
+/* ================= MAIN CONTAINER ================= */
 .container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -46,6 +54,59 @@ h2 {
     text-align: center;
 }
 
+/* ================= SEARCH CONTAINER ================= */
+.search-container {
+    position: relative;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 50px;
+    font-size: 1rem;
+    background: white;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.clear-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #f87171;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.clear-btn:hover {
+    background: #dc2626;
+}
+
+/* ================= LESSONS GRID ================= */
 .lessons-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -62,11 +123,18 @@ h2 {
 
 .lesson-card:hover {
     transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.lesson-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
 }
 
 .lesson-image img {
     width: 100%;
-    height: 180px;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -76,10 +144,12 @@ h2 {
 
 .lesson-details h3 {
     margin-bottom: 0.5rem;
+    font-size: 1.3rem;
 }
 
 .lesson-details p {
     margin: 0.25rem 0;
+    color: #666;
 }
 
 .price {
@@ -111,7 +181,15 @@ h2 {
     cursor: not-allowed;
 }
 
-/* Cart Section */
+/* ================= NO RESULTS ================= */
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* ================= CART SECTION ================= */
 .cart-section {
     background: white;
     padding: 2rem;
@@ -138,8 +216,14 @@ h2 {
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
+    transition: background 0.2s;
 }
 
+.continue-btn:hover {
+    background: #5568d3;
+}
+
+/* ================= CART ITEMS ================= */
 .cart-item {
     display: flex;
     justify-content: space-between;
@@ -149,10 +233,16 @@ h2 {
     margin-bottom: 1rem;
     border-radius: 8px;
     gap: 1rem;
+    transition: box-shadow 0.2s;
+}
+
+.cart-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .item-info h3 {
     margin-bottom: 0.5rem;
+    font-size: 1.2rem;
 }
 
 .item-info p {
@@ -160,6 +250,12 @@ h2 {
     color: #666;
 }
 
+.item-info .price {
+    color: #667eea;
+    font-weight: bold;
+}
+
+/* ================= QUANTITY CONTROLS ================= */
 .qty-controls {
     display: flex;
     align-items: center;
@@ -181,6 +277,7 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.2s;
 }
 
 .qty-btn:hover {
@@ -201,12 +298,14 @@ h2 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .remove-btn:hover {
     background: #dc2626;
 }
 
+/* ================= CART SUMMARY ================= */
 .cart-summary {
     margin-top: 2rem;
     padding: 1.5rem;
@@ -220,9 +319,52 @@ h2 {
     font-size: 1.5rem;
 }
 
+/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
+    header {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    nav button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .container {
+        padding: 0 0.5rem;
+        margin: 1rem auto;
+    }
+
+    .lessons-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
     .cart-item {
         flex-direction: column;
         text-align: center;
+    }
+
+    .search-input {
+        font-size: 0.9rem;
+        padding: 0.875rem 3rem 0.875rem 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.25rem;
+    }
+
+    .lesson-details .price {
+        font-size: 1.2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
     }
 }
