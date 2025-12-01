@@ -80,6 +80,21 @@ createApp({
     },
 
     methods: {
+        // Get image URL for a lesson
+        getImageUrl(lesson) {
+            // If lesson has an image property, use it; otherwise generate from subject
+            const imageName = lesson.image || `${lesson.subject.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+            return `${this.apiUrl}/${imageName}`;
+        },
+
+        // Handle image load error
+        handleImageError(event) {
+            // Set a placeholder image or default image on error
+            event.target.src = `${this.apiUrl}/images/default.jpg`;
+            // Or use a data URL for a simple placeholder
+            // event.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23ddd" width="200" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999">No Image</text></svg>';
+        },
+
         async fetchLessons() {
             try {
                 this.loading = true;
@@ -228,7 +243,7 @@ createApp({
 
         async increaseQty(item) {
             const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
-            if (lesson.spaces > 0) {
+            if (lesson && lesson.spaces > 0) {
                 item.qty++;
                 lesson.spaces--;
                 await this.updateLessonSpaces(lesson._id, lesson.spaces);
@@ -239,15 +254,19 @@ createApp({
             if (item.qty > 1) {
                 item.qty--;
                 const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
-                lesson.spaces++;
-                await this.updateLessonSpaces(lesson._id, lesson.spaces);
+                if (lesson) {
+                    lesson.spaces++;
+                    await this.updateLessonSpaces(lesson._id, lesson.spaces);
+                }
             }
         },
 
         async removeLesson(item) {
             const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
-            lesson.spaces += item.qty;
-            await this.updateLessonSpaces(lesson._id, lesson.spaces);
+            if (lesson) {
+                lesson.spaces += item.qty;
+                await this.updateLessonSpaces(lesson._id, lesson.spaces);
+            }
             this.cart = this.cart.filter(i => (i._id || i.id) !== (item._id || item.id));
         },
 
@@ -292,7 +311,7 @@ createApp({
                         city: "",
                         address: "",
                         postal: "",
-                        isGift: false  // RESET isGift
+                        isGift: false
                     };
                     this.errors = {
                         firstName: "",
