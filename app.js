@@ -6,7 +6,7 @@ createApp({
             appName: "After School Classes",
             currentPage: "lessons",
             apiUrl: "http://localhost:3000",
-            
+
             searchQuery: "",
             sortBy: "",
             sortOrder: "asc",
@@ -17,7 +17,8 @@ createApp({
                 lastName: "",
                 city: "",
                 address: "",
-                postal: ""
+                postal: "",
+                isGift: false  
             },
 
             errors: {
@@ -151,17 +152,9 @@ createApp({
             }
         },
 
-        showLessons() { 
-            this.currentPage = "lessons"; 
-        },
-        
-        showCart() { 
-            this.currentPage = "cart"; 
-        },
-
-        showCheckout() { 
-            this.currentPage = "checkout"; 
-        },
+        showLessons() { this.currentPage = "lessons"; },
+        showCart() { this.currentPage = "cart"; },
+        showCheckout() { this.currentPage = "checkout"; },
 
         validateField(field) {
             this.errors[field] = "";
@@ -215,6 +208,49 @@ createApp({
             }
         },
 
+        async addToCart(lesson) {
+            const found = this.cart.find(i => i.id === lesson.id || i._id === lesson._id);
+
+            if (found) {
+                found.qty++;
+            } else {
+                this.cart.push({ 
+                    ...lesson, 
+                    id: lesson._id || lesson.id,
+                    qty: 1 
+                });
+            }
+
+            lesson.spaces--;
+            
+            await this.updateLessonSpaces(lesson._id, lesson.spaces);
+        },
+
+        async increaseQty(item) {
+            const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
+            if (lesson.spaces > 0) {
+                item.qty++;
+                lesson.spaces--;
+                await this.updateLessonSpaces(lesson._id, lesson.spaces);
+            }
+        },
+
+        async decreaseQty(item) {
+            if (item.qty > 1) {
+                item.qty--;
+                const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
+                lesson.spaces++;
+                await this.updateLessonSpaces(lesson._id, lesson.spaces);
+            }
+        },
+
+        async removeLesson(item) {
+            const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
+            lesson.spaces += item.qty;
+            await this.updateLessonSpaces(lesson._id, lesson.spaces);
+            this.cart = this.cart.filter(i => (i._id || i.id) !== (item._id || item.id));
+        },
+
         validateForm() {
             this.validateField('firstName');
             this.validateField('lastName');
@@ -255,7 +291,8 @@ createApp({
                         lastName: "",
                         city: "",
                         address: "",
-                        postal: ""
+                        postal: "",
+                        isGift: false  // RESET isGift
                     };
                     this.errors = {
                         firstName: "",
@@ -270,48 +307,6 @@ createApp({
                 alert("Failed to submit order. Please try again.");
                 console.error('Order submission error:', err);
             }
-        },
-
-        async addToCart(lesson) {
-            const found = this.cart.find(i => i.id === lesson.id || i._id === lesson._id);
-
-            if (found) {
-                found.qty++;
-            } else {
-                this.cart.push({ 
-                    ...lesson, 
-                    id: lesson._id || lesson.id,
-                    qty: 1 
-                });
-            }
-
-            lesson.spaces--;
-            await this.updateLessonSpaces(lesson._id, lesson.spaces);
-        },
-
-        async increaseQty(item) {
-            const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
-            if (lesson.spaces > 0) {
-                item.qty++;
-                lesson.spaces--;
-                await this.updateLessonSpaces(lesson._id, lesson.spaces);
-            }
-        },
-
-        async decreaseQty(item) {
-            if (item.qty > 1) {
-                item.qty--;
-                const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
-                lesson.spaces++;
-                await this.updateLessonSpaces(lesson._id, lesson.spaces);
-            }
-        },
-
-        async removeLesson(item) {
-            const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
-            lesson.spaces += item.qty;
-            await this.updateLessonSpaces(lesson._id, lesson.spaces);
-            this.cart = this.cart.filter(i => (i._id || i.id) !== (item._id || item.id));
         }
     }
 }).mount("#app");

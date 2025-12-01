@@ -1,48 +1,22 @@
-/* ADD THIS TO THE END OF VERSION 8 CSS */
-
-/* ================= ORDER SUMMARY ================= */
-.order-summary {
-    margin-top: 2.5rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-    border-radius: var(--border-radius);
-    border: 2px solid rgba(102, 126, 234, 0.2);
-}
-
-.order-summary h3 {
-    color: var(--text-dark);
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-weight: 700;
-}
-
-.order-summary p {
+.gift-toggle {
     display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    color: var(--text-dark);
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 12px;
 }
 
-.order-summary p:last-child {
-    border-bottom: none;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-top: 0.5rem;
-    padding-top: 1rem;
-    border-top: 2px solid var(--primary-color);
+.gift-toggle input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
 }
 
-.order-summary strong {
-    color: var(--text-dark);
-    font-weight: 600;
-}
-
-@media (max-width: 768px) {
-    .order-summary p {
-        flex-direction: column;
-        gap: 0.25rem;
-        text-align: center;
-    }
+.gift-toggle label {
+    margin: 0;
+    cursor: pointer;
+    font-size: 1rem;
 }
