@@ -90,9 +90,7 @@ createApp({
         // Handle image load error
         handleImageError(event) {
             // Set a placeholder image or default image on error
-            event.target.src = `${this.apiUrl}/images/default.jpg`;
-            // Or use a data URL for a simple placeholder
-            // event.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23ddd" width="200" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999">No Image</text></svg>';
+            event.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23ddd" width="200" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999">No Image</text></svg>';
         },
 
         async fetchLessons() {
