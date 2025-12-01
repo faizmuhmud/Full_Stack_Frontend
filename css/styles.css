@@ -99,6 +99,28 @@ h2 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* ================= LOADING & ERROR STATES ================= */
+.loading {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.3rem;
+    color: var(--white);
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    background: var(--danger-color);
+    color: white;
+    border-radius: 12px;
+    margin: 2rem auto;
+    max-width: 600px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+}
+
 /* ================= SEARCH CONTAINER ================= */
 .search-container {
     position: relative;
@@ -209,7 +231,6 @@ h2 {
     margin-bottom: 2rem;
 }
 
-/* ================= LESSON CARD ================= */
 .lesson-card {
     background: var(--white);
     border-radius: 20px;
@@ -273,7 +294,6 @@ h2 {
     margin: 0.75rem 0;
 }
 
-/* ================= BUTTONS ================= */
 .add-btn {
     margin-top: auto;
     padding: 0.875rem 1.5rem;
@@ -343,7 +363,6 @@ h2 {
     box-shadow: var(--shadow-lg);
 }
 
-/* ================= CART ITEMS ================= */
 .cart-item {
     display: flex;
     justify-content: space-between;
@@ -378,7 +397,6 @@ h2 {
     color: var(--primary-color);
 }
 
-/* ================= QUANTITY CONTROLS ================= */
 .qty-controls {
     display: flex;
     align-items: center;
@@ -436,7 +454,6 @@ h2 {
     background: #dc2626;
 }
 
-/* ================= CART SUMMARY ================= */
 .cart-summary {
     margin-top: 2rem;
     padding: 2rem;
@@ -452,79 +469,26 @@ h2 {
     font-weight: 700;
 }
 
-/* ================= NO RESULTS ================= */
-.no-results {
-    text-align: center;
-    padding: 3rem;
+.checkout-btn {
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 50px;
     font-size: 1.2rem;
-    color: var(--white);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--primary-color);
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    margin-top: 1rem;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 768px) {
-    header {
-        padding: 1rem;
-    }
-
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    nav {
-        gap: 0.5rem;
-    }
-
-    nav button {
-        padding: 0.625rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .container {
-        padding: 0 1rem;
-        margin: 1rem auto;
-    }
-
-    .lessons-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .cart-item {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    .sort-container {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .sort-select {
-        width: 100%;
-    }
+.checkout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
 }
 
-@media (max-width: 480px) {
-    header h1 {
-        font-size: 1.25rem;
-    }
-
-    .lesson-details .price {
-        font-size: 1.5rem;
-    }
-
-    .search-input {
-        font-size: 0.9rem;
-        padding: 0.875rem 3rem 0.875rem 1.25rem;
-    }
-}
-
-/* Checkout Form */
+/* ================= CHECKOUT FORM ================= */
 .checkout-form {
     background: var(--white);
     border-radius: 20px;
@@ -601,21 +565,83 @@ h2 {
     box-shadow: var(--shadow-xl);
 }
 
-.checkout-btn {
-    padding: 1rem 3rem;
-    border: none;
-    border-radius: 50px;
+.no-results {
+    text-align: center;
+    padding: 3rem;
     font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-    background: var(--white);
-    color: var(--primary-color);
-    transition: var(--transition);
-    box-shadow: var(--shadow-md);
-    margin-top: 1rem;
+    color: var(--white);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.checkout-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-xl);
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    header {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    nav {
+        gap: 0.5rem;
+    }
+
+    nav button {
+        padding: 0.625rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .container {
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
+
+    .lessons-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .checkout-form {
+        padding: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .sort-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .sort-select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.25rem;
+    }
+
+    .lesson-details .price {
+        font-size: 1.5rem;
+    }
+
+    .search-input {
+        font-size: 0.9rem;
+        padding: 0.875rem 3rem 0.875rem 1.25rem;
+    }
+
+    .checkout-btn,
+    .submit-btn {
+        font-size: 1rem;
+        padding: 1rem 2rem;
+    }
 }

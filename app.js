@@ -5,11 +5,13 @@ createApp({
         return {
             appName: "After School Classes",
             currentPage: "lessons",
-            cart: [],
+            apiUrl: "http://localhost:3000",
+            
             searchQuery: "",
             sortBy: "",
             sortOrder: "asc",
-            
+            cart: [],
+
             customer: {
                 firstName: "",
                 lastName: "",
@@ -25,18 +27,15 @@ createApp({
                 address: "",
                 postal: ""
             },
-            
-            lessons: [
-                { id: 1, subject: "Mathematics", location: "Dubai", price: 150, spaces: 5, image: "https://via.placeholder.com/300x200?text=Math" },
-                { id: 2, subject: "English", location: "Abu Dhabi", price: 120, spaces: 8, image: "https://via.placeholder.com/300x200?text=English" },
-                { id: 3, subject: "Science", location: "Sharjah", price: 180, spaces: 3, image: "https://via.placeholder.com/300x200?text=Science" },
-                { id: 4, subject: "Art", location: "Dubai", price: 100, spaces: 10, image: "https://via.placeholder.com/300x200?text=Art" },
-                { id: 5, subject: "Music", location: "Ajman", price: 130, spaces: 6, image: "https://via.placeholder.com/300x200?text=Music" },
-                { id: 6, subject: "History", location: "Dubai", price: 140, spaces: 7, image: "https://via.placeholder.com/300x200?text=History" },
-                { id: 7, subject: "Geography", location: "Sharjah", price: 135, spaces: 4, image: "https://via.placeholder.com/300x200?text=Geography" },
-                { id: 8, subject: "Physics", location: "Abu Dhabi", price: 170, spaces: 5, image: "https://via.placeholder.com/300x200?text=Physics" }
-            ]
+
+            lessons: [],
+            loading: true,
+            error: null
         };
+    },
+
+    mounted() {
+        this.fetchLessons();
     },
 
     computed: {
@@ -82,6 +81,58 @@ createApp({
     },
 
     methods: {
+        async fetchLessons() {
+            try {
+                this.loading = true;
+                const response = await fetch(`${this.apiUrl}/collection/lessons`);
+                if (!response.ok) throw new Error('Failed to fetch lessons');
+                this.lessons = await response.json();
+                this.loading = false;
+            } catch (err) {
+                this.error = err.message;
+                this.loading = false;
+                console.error('Error fetching lessons:', err);
+            }
+        },
+
+        async updateLessonSpaces(lessonId, newSpaces) {
+            try {
+                const response = await fetch(`${this.apiUrl}/collection/lessons/${lessonId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ spaces: newSpaces })
+                });
+                
+                if (!response.ok) throw new Error('Failed to update lesson');
+                const result = await response.json();
+                return result;
+            } catch (err) {
+                console.error('Error updating lesson:', err);
+                alert('Failed to update lesson availability');
+            }
+        },
+
+        async submitOrderToServer(orderData) {
+            try {
+                const response = await fetch(`${this.apiUrl}/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to submit order');
+                const result = await response.json();
+                return result;
+            } catch (err) {
+                console.error('Error submitting order:', err);
+                throw err;
+            }
+        },
+
         showLessons() { 
             this.currentPage = "lessons"; 
         },
@@ -156,67 +207,93 @@ createApp({
             return !Object.values(this.errors).some(error => error !== "");
         },
 
-        submitOrder() {
+        async submitOrder() {
             if (!this.validateForm()) {
                 alert("Please fix all errors before submitting");
                 return;
             }
 
-            alert("Order Completed! 🎉\n\nThank you for your order, " + this.customer.firstName + "!");
-            
-            this.cart = [];
-            this.customer = {
-                firstName: "",
-                lastName: "",
-                city: "",
-                address: "",
-                postal: ""
-            };
-            this.errors = {
-                firstName: "",
-                lastName: "",
-                city: "",
-                address: "",
-                postal: ""
-            };
-            this.currentPage = "lessons";
+            try {
+                const orderData = {
+                    customer: { ...this.customer },
+                    items: this.cart.map(item => ({
+                        lessonId: item._id || item.id,
+                        subject: item.subject,
+                        location: item.location,
+                        price: item.price,
+                        qty: item.qty
+                    })),
+                    total: this.cartTotal
+                };
+
+                const result = await this.submitOrderToServer(orderData);
+
+                if (result.success) {
+                    alert("Order Completed! 🎉\n\nThank you for your order, " + this.customer.firstName + "!");
+                    
+                    this.cart = [];
+                    this.customer = {
+                        firstName: "",
+                        lastName: "",
+                        city: "",
+                        address: "",
+                        postal: ""
+                    };
+                    this.errors = {
+                        firstName: "",
+                        lastName: "",
+                        city: "",
+                        address: "",
+                        postal: ""
+                    };
+                    this.currentPage = "lessons";
+                }
+            } catch (err) {
+                alert("Failed to submit order. Please try again.");
+                console.error('Order submission error:', err);
+            }
         },
 
-        addToCart(lesson) {
-            const found = this.cart.find(i => i.id === lesson.id);
-            
+        async addToCart(lesson) {
+            const found = this.cart.find(i => i.id === lesson.id || i._id === lesson._id);
+
             if (found) {
                 found.qty++;
             } else {
                 this.cart.push({ 
                     ...lesson, 
+                    id: lesson._id || lesson.id,
                     qty: 1 
                 });
             }
-            
+
             lesson.spaces--;
+            await this.updateLessonSpaces(lesson._id, lesson.spaces);
         },
 
-        increaseQty(item) {
-            const lesson = this.lessons.find(l => l.id === item.id);
+        async increaseQty(item) {
+            const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
             if (lesson.spaces > 0) {
                 item.qty++;
                 lesson.spaces--;
+                await this.updateLessonSpaces(lesson._id, lesson.spaces);
             }
         },
 
-        decreaseQty(item) {
+        async decreaseQty(item) {
             if (item.qty > 1) {
                 item.qty--;
-                const lesson = this.lessons.find(l => l.id === item.id);
+                const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
                 lesson.spaces++;
+                await this.updateLessonSpaces(lesson._id, lesson.spaces);
             }
         },
 
-        removeLesson(item) {
-            const lesson = this.lessons.find(l => l.id === item.id);
+        async removeLesson(item) {
+            const lesson = this.lessons.find(l => (l._id || l.id) === (item._id || item.id));
             lesson.spaces += item.qty;
-            this.cart = this.cart.filter(i => i.id !== item.id);
+            await this.updateLessonSpaces(lesson._id, lesson.spaces);
+            this.cart = this.cart.filter(i => (i._id || i.id) !== (item._id || item.id));
         }
     }
 }).mount("#app");
