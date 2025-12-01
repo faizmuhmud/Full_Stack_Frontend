@@ -64,9 +64,9 @@
                         </select>
                     </div>
 
-                    <!-- LESSON GRID -->
+                    <!-- LESSON GRID - CHANGED FROM filteredAndSortedLessons to sortedLessons -->
                     <div class="lessons-grid">
-                        <div v-for="lesson in filteredAndSortedLessons" :key="lesson._id || lesson.id" class="lesson-card">
+                        <div v-for="lesson in sortedLessons" :key="lesson._id || lesson.id" class="lesson-card">
                             <div class="lesson-image">
                                 <img :src="lesson.image">
                             </div>
@@ -82,8 +82,8 @@
                         </div>
                     </div>
 
-                    <!-- NO RESULTS MESSAGE -->
-                    <p v-if="filteredAndSortedLessons.length === 0" class="no-results">
+                    <!-- NO RESULTS MESSAGE - CHANGED FROM filteredAndSortedLessons to sortedLessons -->
+                    <p v-if="sortedLessons.length === 0" class="no-results">
                         No classes found matching "{{ searchQuery }}"
                     </p>
                 </div>

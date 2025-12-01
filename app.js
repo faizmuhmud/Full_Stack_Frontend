@@ -47,36 +47,34 @@ createApp({
             return this.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
         },
 
-        filteredAndSortedLessons() {
+        sortedLessons() {
             let list = [...this.lessons];
 
-            if (this.searchQuery) {
-                const query = this.searchQuery.toLowerCase();
-                list = list.filter(lesson => 
-                    lesson.subject.toLowerCase().includes(query) ||
-                    lesson.location.toLowerCase().includes(query)
-                );
-            }
+            if (!this.sortBy) return list;
 
-            if (this.sortBy) {
-                list.sort((a, b) => {
-                    let compareValue = 0;
+            list.sort((a, b) => {
+                let compareValue = 0;
 
-                    if (this.sortBy === "subject") {
-                        compareValue = a.subject.localeCompare(b.subject);
-                    } else if (this.sortBy === "location") {
-                        compareValue = a.location.localeCompare(b.location);
-                    } else if (this.sortBy === "price") {
-                        compareValue = a.price - b.price;
-                    } else if (this.sortBy === "availability") {
-                        compareValue = a.spaces - b.spaces;
-                    }
+                if (this.sortBy === "subject") {
+                    compareValue = a.subject.localeCompare(b.subject);
+                } else if (this.sortBy === "location") {
+                    compareValue = a.location.localeCompare(b.location);
+                } else if (this.sortBy === "price") {
+                    compareValue = a.price - b.price;
+                } else if (this.sortBy === "availability") {
+                    compareValue = a.spaces - b.spaces;
+                }
 
-                    return this.sortOrder === "asc" ? compareValue : -compareValue;
-                });
-            }
+                return this.sortOrder === "asc" ? compareValue : -compareValue;
+            });
 
             return list;
+        }
+    },
+
+    watch: {
+        searchQuery(newQuery) {
+            this.performSearch(newQuery);
         }
     },
 
@@ -92,6 +90,26 @@ createApp({
                 this.error = err.message;
                 this.loading = false;
                 console.error('Error fetching lessons:', err);
+            }
+        },
+
+        async performSearch(query) {
+            try {
+                this.loading = true;
+                
+                if (!query || query.trim() === '') {
+                    await this.fetchLessons();
+                    return;
+                }
+
+                const response = await fetch(`${this.apiUrl}/search/lessons?q=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error('Failed to search lessons');
+                this.lessons = await response.json();
+                this.loading = false;
+            } catch (err) {
+                this.error = err.message;
+                this.loading = false;
+                console.error('Error searching lessons:', err);
             }
         },
 
