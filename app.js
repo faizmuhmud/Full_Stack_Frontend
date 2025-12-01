@@ -5,7 +5,7 @@ createApp({
         return {
             appName: "After School Classes",
             currentPage: "lessons",
-            apiUrl: "http://localhost:3000",
+            apiUrl: "https://full-stack-backend-90u1.onrender.com",
 
             searchQuery: "",
             sortBy: "",
