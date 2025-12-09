@@ -82,7 +82,6 @@ createApp({
     methods: {
         // Get image URL for a lesson
         getImageUrl(lesson) {
-            // If lesson has an image property, use it; otherwise generate from subject
             const imageName = lesson.image || `${lesson.subject.toLowerCase().replace(/\s+/g, '-')}.jpg`;
             return `${this.apiUrl}/${imageName}`;
         },
